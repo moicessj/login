@@ -189,3 +189,26 @@ body {
         border-top-right-radius: 0;
     }
 }
+
+.form label img {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+    flex: 0 0 14px;
+    opacity: .65;
+    margin-right: 5px;
+}
+
+/* Diferencia visualmente los avisos de éxito y error del registro. */
+.form-message {
+    margin: 0 0 12px;
+    font-size: .9rem;
+}
+
+.form-message.success {
+    color: #176b36;
+}
+
+.form-message.error {
+    color: #b42318;
+}
