@@ -1,0 +1,389 @@
+a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+a:link,
+a:visited,
+a:hover,
+a:active {
+  color: #ffffff;
+}
+
+ul {
+  list-style-type: none;
+}
+
+
+
+/*img{width:30%}*/
+p{font-size: 20px;}
+
+.n1{width: 20%;}
+/* Contenedor Principal */
+.carrusel-seccion {
+  text-align: center;
+  max-width: 1100px;
+  width: calc(100% - 32px);
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+}
+
+.carrusel-contenedor {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  color: #111111;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+.carrusel-pistas {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.carrusel-pistas::-webkit-scrollbar {
+  display: none;
+}
+
+.carrusel-slide {
+  flex: 0 0 calc((100% - 32px) / 3);
+  scroll-snap-align: start;
+  position: relative;
+  box-sizing: border-box;
+  padding: 20px 8px;
+}
+
+/* Controles de navegación */
+.carrusel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(231, 11, 11, 0.651);
+  color: #edbb00;
+  text-decoration: none;
+  font-size: 22px;
+  font-weight: bold;
+  padding: 10px 14px;
+  border-radius: 50%;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  border: 1px solid rgba(237, 187, 0, 0.4);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.carrusel-control:hover {
+  background-color: #edbb00;;
+  color: #ffffff;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carrusel-control.anterior { left: 10px; }
+.carrusel-control.siguiente { right: 10px; }
+
+.carrusel-slide > .flecha {
+  display: none;
+}
+
+/* Contenedor de la Tarjeta */
+.tarjeta-jugador {
+  position: relative;
+  overflow: hidden;
+  border-radius: 15px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.contenedor-imagen h3 {
+  margin: 0 0 12px 0;
+  font-size: 1.2rem;
+  color: #fdfdfd;
+}
+
+.carrusel-slide img.n1 {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+/* BOTÓN REAL PARA VER INFORMACIÓN */
+.btn-abrir {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 18px;
+  background-color: #111111;
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: bold;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-abrir:hover {
+  background-color: #e50914;
+  transform: translateY(-2px);
+}
+
+/* Checkbox oculto */
+.toggle-info {
+  display: none;
+}
+
+/* Panel de información */
+.info-inferior {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 30%;
+  background: rgba(20, 20, 20, 0.96);
+  box-sizing: border-box;
+  padding: 10px 15px;
+  text-align: left;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+
+  /* Animación desde abajo */
+  transform: translateY(100%);
+  transition: transform 0.3s ease-out;
+}
+
+.info-inferior h4 {
+  margin: 0 0 4px 0;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.info-inferior p {
+  margin: 3px 0;
+  font-size: 0.85rem;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Botón (X) para cerrar */
+.cerrar-info {
+  position: absolute;
+  top: 5px;
+  right: 12px;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.cerrar-info:hover {
+  color: #e50914;
+}
+
+/* AL HACER CLIC: Aparece el panel de información */
+.toggle-info:checked ~ .info-inferior {
+  transform: translateY(0);
+}
+
+@media (max-width: 760px) {
+  .carrusel-slide {
+    flex-basis: calc((100% - 16px) / 2);
+  }
+}
+
+@media (max-width: 480px) {
+  .carrusel-slide {
+    flex-basis: 100%;
+  }
+}
+
+body {
+  color: rgb(0, 0, 0);
+  background-image: linear-gradient(to right, rgba(161, 161, 219, 0.8), rgba(190, 87, 87, 0.288)), url("../wallpa.jfif");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  flex-direction: column;
+  display: flex;
+  font-family: sans-serif; Arial, Helvetica, sans-serif;
+  
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-image: url("../wallpaper.png");
+    z-index: 1000; /* Asegura que esté siempre por encima de todo */
+}
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center; /* Cambia a 'flex-end' si los quieres a la derecha */
+    align-items: center;
+    margin: 0;
+    padding: 15px 0;
+}
+nav li {
+    margin: 0 15px;
+}
+footer {
+    width: 100%;
+    background-image: url("../wallpaper.png");
+    color: #fff;
+    padding: 20px 0;
+    margin-top: auto; /* Ayuda a empujarla al final */
+}
+footer .contenedor-footer {
+    display: flex;
+    justify-content: space-around; /* Distribuye el espacio entre ambas secciones */
+    align-items: flex-start;
+    flex-wrap: wrap; /* Permite que en celulares se acomoden una debajo de la otra */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+.Titulos details summary {
+    list-style: none;
+    cursor: pointer;
+}
+
+/* Ocultar flecha en navegadores WebKit */
+.Titulos details summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Contenedor principal de los trofeos */
+.trofeos {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 50px; /* Espacio entre cada imagen/trofeo */
+}
+
+/* Hacemos que cada details sea la referencia para el texto flotante */
+.trofeos details {
+    position: relative; 
+}
+
+/* Efecto hover en la imagen */
+.trofeos img:hover {
+    transform: scale(1.05);
+}
+
+.patro img:hover {
+    transform: scale(1.05);
+}
+
+/* Caja de texto desplegable (Flotante para que no mueva las demás imágenes) */
+.info-trofeo {
+    position: absolute;          /* Saca el texto del flujo normal */
+    top: 100%;                   /* Lo coloca justo debajo de su imagen */
+    left: 50%;                   /* Lo centra respecto a la imagen */
+    transform: translateX(-50%); /* Ajuste fino de centrado */
+    width: 220px;                /* Ancho fijo para que no se desborde */
+    
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #01025e;
+    border-radius: 5px;
+    border: 1px solid #fdb03b;
+    color: #fdfdfd;
+    
+    z-index: 10;                 /* Asegura que flote por encima de todo */
+}
+
+ul li a {
+    color: #333333; /* Cambia este color por el que prefieras inicialmente */
+    text-decoration: none;
+    transition: color 0.3s ease; /* Transición suave */
+}
+
+/* El color que tendrá CUALQUIER enlace al pasar el ratón por encima */
+ul li a:hover {
+    color: #ffd000; /* Pon aquí el color que tú quieras (ej. un tono rojizo, verde, etc.) */
+}
+
+/* Ocultar el checkbox */
+.modal-toggle {
+    display: none;
+}
+
+/* Estilo del botón */
+.boton-video {
+    background-color: #ff0000; /* Color rojo estilo YouTube */
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    display: inline-block;
+    font-family: sans-serif;
+}
+
+/* Ocultar la modal por defecto */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Mostrar la modal cuando se marca el checkbox */
+.modal-toggle:checked ~ .modal-overlay {
+    display: flex;
+}
+
+/* Caja del contenido */
+.modal-contenido {
+    position: relative;
+    width: 90%;
+    max-width: 800px;
+}
+
+/* Truco para mantener la proporción 16:9 del video de YouTube */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* Proporción 16:9 */
+    height: 0;
+    overflow: hidden;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+}
+
+/* Botón de cerrar (la "X") */
+.boton-cerrar {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: white;
+    font-size: 35px;
+    cursor: pointer;
+    font-family: sans-serif;
+}

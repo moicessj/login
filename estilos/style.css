@@ -27,41 +27,81 @@ body {
     transition: transform .5s ease, opacity .5s ease, visibility .5s ease;
 }
 
-.information {
+.register .information {
     width: 40%;
     display: flex;
     align-items: center;
     text-align: center;
-    background-color: aliceblue;
+    background-color: #F0F8FF;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
 }
 
-.info-childs h2 {
+.login .information {
+    width: 40%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    background-color: #172033;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+.register .info-childs h2 {
+    color: #172033;
     width: 100%;
     padding: 0 30px;
 }
 
-.info-childs p {
-    margin: 15px 0;
-    color: gray;
+.login .info-childs h2 {
+    color: #ffffff;
+    width: 100%;
+    padding: 0 30px;
 }
 
-.info-childs input {
+.register .info-childs p {
+    margin: 15px 0;
+    color: #354256;
+}
+
+.login .info-childs p {
+    margin: 15px 0;
+    color: #f7f7f8;
+}
+
+.register .info-childs input {
     background-color: transparent;
     outline: none;
-    border: solid 2px #9191bd;
+    border: solid 2px #394A82;
     border-radius: 20px;
     padding: 10px 20px;
-    color: #9191bd;
+    color: #394A82;
     cursor: pointer;
     transition: background-color .3s ease;
 }
 
-.info-childs input:hover {
-    background-color: #9191bd;
+.login .info-childs input {
+    background-color: transparent;
+    outline: none;
+    border: solid 2px #ffffff;
+    border-radius: 20px;
+    padding: 10px 20px;
+    color: #fcfdff;
+    cursor: pointer;
+    transition: background-color .3s ease;
+}
+
+.register .info-childs input:hover {
+    background-color: #394A82;
     border: none;
-    color: white;
+    color: rgb(255, 255, 255);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+}
+
+.login .info-childs input:hover {
+    background-color: #fdfdfd;
+    border: none;
+    color: #172033;
     box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
 }
 
@@ -71,7 +111,7 @@ body {
     justify-content: center;
     width: 60%;
     text-align: center;
-    background-color: rgba(255, 255, 255, 0.445);
+    background-color: rgba(255, 241, 214, 0.445);
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     backdrop-filter: blur(3px);
@@ -82,13 +122,15 @@ body {
 }
 
 .form-information-childs h2 {
-    color: #333;
+    color: #172033;
     font-size: 2rem;
 }
 
 .form-information-childs p {
-    color: #555;
+    color: #354256;
+    font-size: 1rem;
 }
+
 
 .icons {
     margin: 15px 0;
@@ -99,7 +141,7 @@ body {
     padding: 15px;
     cursor: pointer;
     margin: 0 10px;
-    color: #9191bd;
+    color: #bdaa91;
     transition: background-color 0.3s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
     border: solid thin red;
@@ -118,6 +160,7 @@ body {
     display: flex;
     align-items: center;
     margin-bottom: 15px;
+    border: 2px solid #64748B;
     border-radius: 20px;
     padding: 0 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
@@ -131,7 +174,7 @@ body {
     border: none;
     outline: none;
     border-radius: 20px;
-    color: #333;
+    color: #000000;
 }
 
 .form label i {
@@ -139,7 +182,7 @@ body {
 }
 
 .form input[type="submit"] {
-    background-color: #9191bd;
+    background-color: #394A82;
     color: #fff;
     border-radius: 20px;
     border: none;
@@ -150,7 +193,7 @@ body {
 }
 
 .form input[type="submit"]:hover {
-    background-color: #7a7a9a;
+    background-color: #16275e;
 }
 
 .hide {
@@ -173,7 +216,16 @@ body {
         min-height: 500px;
     }
 
-    .information {
+    .register .information {
+        width: 100%;
+        padding: 20px;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .login .information {
         width: 100%;
         padding: 20px;
         border-top-left-radius: 20px;
@@ -211,4 +263,29 @@ body {
 
 .form-message.error {
     color: #b42318;
+}
+
+h2 {
+    color: #172033;
+}
+
+h4 {
+    color: #172033;
+
+}
+
+.campo {
+    width: 100%;
+    margin: 0 auto 1rem auto;
+    text-align: left;
+}
+
+.campo h4 {
+    text-align: left;
+    margin: 0 0 0.3rem 0;
+}
+
+.campo input {
+    width: 100%;
+    box-sizing: border-box;
 }

@@ -57,6 +57,44 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["registrar"])) {
         }
     }
 }
+// PROCESAR INICIO DE SESIÓN
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["iniciar_sesion"])) {
+
+    $correoLogin = trim($_POST["correo"] ?? "");
+    $contrasenaLogin = $_POST["contrasena"] ?? "";
+
+    // Buscar el correo en la base de datos
+    $consulta = $conexion->prepare(
+        "SELECT id_usuario, correo, contrasena
+         FROM public.usuario
+         WHERE correo = :correo"
+    );
+
+    $consulta->execute([
+        "correo" => $correoLogin
+    ]);
+
+    $usuario = $consulta->fetch();
+
+    // Comprobar que existe el usuario y que la contraseña coincide
+    if ($usuario && password_verify($contrasenaLogin, $usuario["contrasena"])) {
+
+        session_regenerate_id(true);
+
+        $_SESSION["id_usuario"] = $usuario["id_usuario"];
+        $_SESSION["correo"] = $usuario["correo"];
+
+        // Entrar directamente a la página de Barcelona
+        header("Location: inicio.php");
+        exit;
+
+    } else {
+
+        $mensajeLogin = "Correo o contraseña incorrectos.";
+
+    }
+}
 
 ?>
 
@@ -78,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["registrar"])) {
         <div class="information">
             <div class="info-childs">
             <h2>Bienvenidos</h2>
-            <p>Para unirte a nuestra comunidad por favor inicia sesion con tus datos</p>
+            <p><strong>Para unirte a nuestra comunidad por favor inicia sesion con tus datos</strong></p>
             <input type="button" value="Iniciar sesión" id="show-login">
             </div>
         </div>
@@ -88,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["registrar"])) {
                 <div class="icons">
                     
                 </div>
-                <p>Usa tu email para registrarte</P>
+                <p><strong>Usa tu email para registrarte</strong></p>
                 <!-- El aviso muestra el resultado del último intento de registro. -->
                 <?php if ($mensajeRegistro !== ""): ?>
                     <p class="form-message <?= $tipoMensajeRegistro === "success" ? "success" : "error" ?>" role="<?= $tipoMensajeRegistro === "error" ? "alert" : "status" ?>">
@@ -96,19 +134,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["registrar"])) {
                     </p>
                 <?php endif; ?>
              <!-- Los nombres de los campos corresponden a las claves leídas en $_POST. -->
-             <form class="form" method="post" action="index.php">
+             <form class="form" method="POST" action="index.php">
+                <div class= "campo"> 
+                <h4>Usuario:</h4>
                 <label>
                     <img src="imagenes/usuario.png" alt="" aria-hidden="true">
                     <input type="text" name="nombre_completo" placeholder="Ingrese su Nombre Completo" maxlength="100" required value="<?= htmlspecialchars($nombreCompleto, ENT_QUOTES, "UTF-8") ?>">
                 </label>
+                </div>
+                <div class= "campo"> 
+                <h4>Correo:</h4>
                 <label>
                     <img src="imagenes/email.png" alt="" aria-hidden="true">
                     <input type="email" name="correo" placeholder="Ingrese su Correo Electronico" maxlength="100" required value="<?= htmlspecialchars($correo, ENT_QUOTES, "UTF-8") ?>">
                 </label>
+                </div>
+                <div class= "campo"> 
+                <h4>Contraseña:</h4>
                 <label>
                     <img src="imagenes/candado.png" alt="" aria-hidden="true">
                     <input type="password" name="contrasena" placeholder="Ingrese su contraseña" required>
                 </label>
+                </div>
                 <input type="submit" name="registrar" value="Registrar">
              </form>
             </div>
@@ -122,7 +169,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["registrar"])) {
         <div class="information">
             <div class="info-childs">
             <h2>¡Bienvenido de nuevo!</h2>
-            <p>Si aun no tienes una cuenta por favor registrese aqui</p>
+            <p><strong>Si aun no tienes una cuenta por favor registrese aqui</strong></p>
             <input type="button" value="Registrarse" id="show-register">
             </div>
         </div>
@@ -132,18 +179,40 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["registrar"])) {
                 <div class="icons">
                     
                 </div>
-                <p>Iniciar sesion con una cuenta</P>
-             <form class="form">
-                <label>
-                    <img src="imagenes/email.png" alt="" aria-hidden="true">
-                    <input type="email" placeholder="Ingrese su Correo Electronico">
-                </label>
-                <label>
-                    <img src="imagenes/candado.png" alt="" aria-hidden="true">
-                    <input type="password" placeholder="Ingrese su contraseña">
-                </label>
-                <input type="submit" value="Iniciar sesion">
-             </form>
+                <p><strong>Iniciar sesion con una cuenta</strong></p>
+             <form class="form" method="POST" action="index.php">
+ <div class= "campo">                
+<h4>Correo:</h4>
+    <label>
+        <img src="imagenes/email.png" alt="" aria-hidden="true">
+        <input
+            type="email"
+            name="correo"
+            placeholder="Ingrese su Correo Electronico"
+            required
+        >
+        </div>
+    </label>
+     <div class= "campo"> 
+<h4>Contraseña:</h4>
+    <label>
+        <img src="imagenes/candado.png" alt="" aria-hidden="true">
+        <input
+            type="password"
+            name="contrasena"
+            placeholder="Ingrese su contraseña"
+            required
+        >
+        </div>
+    </label>
+
+    <input
+        type="submit"
+        name="iniciar_sesion"
+        value="Iniciar sesion"
+    >
+
+</form>
             </div>
         </div>
     </div>
