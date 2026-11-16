@@ -289,3 +289,68 @@ h4 {
     width: 100%;
     box-sizing: border-box;
 }
+
+
+/* MENSAJES DE VALIDACIÓN DEL CORREO */
+
+.mensaje-correo {
+    display: block;
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+    font-weight: 500;
+}
+
+.mensaje-correo.error {
+    color: #b42318;
+}
+
+.mensaje-correo.success {
+    color: #176b36;
+}
+
+.mensaje-campo {
+    display: block;
+    color: #b42318;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-align: left;
+    margin-top: 0.4rem;
+    margin-bottom: 0.5rem;
+}
+
+.ayuda-contrasena {
+    color: #26354d;
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Mensajes de error */
+.error-campo {
+    display: none;
+    color: #d00000;
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+}
+
+.error-campo.visible {
+    display: block;
+}
+
+.mensaje-servidor {
+    display: block;
+    color: #d00000;
+    font-size: 0.85rem;
+}
+
+.error-campo {
+    display: none;
+    color: #d00000;
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+}
+
+
+.error-campo.visible {
+    display: block;
+}
