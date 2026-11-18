@@ -7,9 +7,12 @@
 
 body {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     place-items: center;
     min-height: 100vh;
+    min-height: 100dvh;
     padding: 1rem;
+    background-color: #172033;
     background-image: url(../imagenes/lluvia.gif);
     background-size: cover;
     background-repeat: no-repeat;
@@ -210,7 +213,14 @@ body {
 }
 
 @media screen and (max-width: 580px) {
+    body {
+        background-attachment: scroll;
+    }
+
     .container-form {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
         flex-direction: column;
         height: auto;
         min-height: 500px;
@@ -239,6 +249,11 @@ body {
         padding: 20px;
         border-bottom-left-radius: 20px;
         border-top-right-radius: 0;
+    }
+
+    .form-information-childs {
+        width: 100%;
+        min-width: 0;
     }
 }
 
@@ -354,3 +369,217 @@ h4 {
 .error-campo.visible {
     display: block;
 }
+
+/* =====================================
+   CAMPO DE CORREO CON DOMINIO SELECCIONABLE
+===================================== */
+
+.form .correo-control {
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    min-width: 0;
+
+    margin-bottom: 15px;
+
+    border: 2px solid #64748B;
+    border-radius: 20px;
+
+    padding: 0 0 0 10px;
+    overflow: hidden;
+
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+
+    background-color: #fff;
+
+}
+
+
+/* ICONO DEL CORREO */
+
+.form .correo-control img {
+
+    width: 14px;
+    height: 14px;
+
+    object-fit: contain;
+
+    flex: 0 0 14px;
+
+    opacity: .65;
+
+    margin-right: 5px;
+
+}
+
+
+/* CAMPO DONDE SE ESCRIBE EL CORREO */
+
+.form .correo-control .correo-local {
+
+    flex: 1;
+
+    min-width: 0;
+
+    width: auto;
+
+    padding: 10px 8px;
+
+    background-color: transparent;
+
+    border: none;
+
+    outline: none;
+
+    border-radius: 0;
+
+    box-shadow: none;
+
+    color: #000;
+
+}
+
+
+/* SELECTOR DEL DOMINIO */
+
+.form .correo-control .dominio-correo {
+
+    flex: 0 0 116px;
+
+    width: 116px;
+
+    max-width: 45%;
+
+    height: 36px;
+
+    padding: 0 5px;
+
+    border: none;
+
+    border-left: 2px solid #64748B;
+
+    border-radius: 0;
+
+    outline: none;
+
+    background-color: transparent;
+
+    color: #172033;
+
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: .72rem;
+
+    cursor: pointer;
+
+}
+
+
+/* Indicador visible al navegar con el teclado */
+
+.keyboard-navigation .form .correo-control:focus-within {
+
+    border-color: #394A82;
+    outline: 3px solid #3498db;
+    outline-offset: 3px;
+
+}
+
+.keyboard-navigation .register .info-childs input:focus,
+.keyboard-navigation .login .info-childs input:focus,
+.keyboard-navigation .form label input:focus,
+.keyboard-navigation .form input[type="submit"]:focus,
+.keyboard-navigation a:focus,
+.keyboard-navigation button:focus {
+
+    outline: 3px solid #3498db;
+    outline-offset: 3px;
+    border-radius: 4px;
+
+}
+
+/* El indicador solo se muestra después de iniciar la navegación con Tab */
+.keyboard-navigation :focus {
+    outline: 3px solid #3498db;
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+.container-form.register {
+    height: auto;
+    min-height: 500px;
+}
+
+/* =====================================
+   MOSTRAR Y OCULTAR CONTRASEÑA
+===================================== */
+
+/* CONTENEDOR */
+
+.password-control {
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* CAMPO DE CONTRASEÑA */
+
+.password-control label {
+    margin-bottom: 0;
+    padding-right: 44px;
+}
+
+/* BOTÓN DEL OJO */
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 30px;
+    height: 30px;
+
+    border: none;
+    background: transparent;
+    color: #64748B;
+
+    cursor: pointer;
+    padding: 5px;
+}
+
+/* TAMAÑO DE LOS ICONOS */
+
+.toggle-password svg {
+    width: 19px;
+    height: 19px;
+}
+
+/* OCULTAR EL OJO TACHADO */
+
+.toggle-password .icon-eye-off {
+    display: none;
+}
+
+/* CUANDO EL OJO ESTÁ ACTIVADO */
+
+.toggle-password.is-visible .icon-eye {
+    display: none;
+}
+
+.toggle-password.is-visible .icon-eye-off {
+    display: block;
+}
+
+/* EFECTO AL PASAR EL RATÓN */
+
+.toggle-password:hover {
+    color: #394A82;
+}
+

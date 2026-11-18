@@ -66,6 +66,9 @@ if (!isset($_SESSION["id_usuario"])) {
       </nav>
     </header>
 
+    <form class="cerrar-sesion-form" action="cerrar_sesion.php" method="POST">
+      <button class="boton-cerrar-sesion" type="submit">Cerrar sesión</button>
+    </form>
 
     <section id="Inicio">
       <h1><em>FC Barcelona</em></h1>

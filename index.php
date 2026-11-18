@@ -17,7 +17,8 @@ unset($_SESSION["mensaje_registro"], $_SESSION["tipo_mensaje_registro"]);
 $erroresRegistroVacios = [
     "usuario" => "",
     "correo" => "",
-    "contrasena" => ""
+    "contrasena" => "",
+    "confirmar_contrasena" => ""
 ];
 $erroresRegistro = $_SESSION["errores_registro"] ?? $erroresRegistroVacios;
 unset($_SESSION["errores_registro"]);
@@ -44,6 +45,56 @@ $mensajeLogin = "";
 $correoLogin = $valoresLogin["correo"] ?? "";
 $contrasenaLogin = "";
 
+// Dominios permitidos
+$dominiosCorreoPermitidos = [
+    "@gmail.com",
+    "@hotmail.com"
+];
+
+// Separar correo del registro
+$correoRegistroLocal = $correo;
+$dominioRegistro = "@gmail.com";
+
+foreach ($dominiosCorreoPermitidos as $dominio) {
+
+    if (
+        $correo !== "" &&
+        strtolower(substr($correo, -strlen($dominio))) === $dominio
+    ) {
+
+        $correoRegistroLocal = substr(
+            $correo,
+            0,
+            -strlen($dominio)
+        );
+
+        $dominioRegistro = $dominio;
+        break;
+    }
+}
+
+// Separar correo del inicio de sesión
+$correoLoginLocal = $correoLogin;
+$dominioLogin = "@gmail.com";
+
+foreach ($dominiosCorreoPermitidos as $dominio) {
+
+    if (
+        $correoLogin !== "" &&
+        strtolower(substr($correoLogin, -strlen($dominio))) === $dominio
+    ) {
+
+        $correoLoginLocal = substr(
+            $correoLogin,
+            0,
+            -strlen($dominio)
+        );
+
+        $dominioLogin = $dominio;
+        break;
+    }
+}
+
 // ==========================================
 // PROCESAR REGISTRO
 // ==========================================
@@ -56,12 +107,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["registrar"])) {
         ? trim($_POST["nombre_completo"])
         : "";
 
-    $correo = isset($_POST["correo"]) && is_string($_POST["correo"])
-        ? trim($_POST["correo"])
-        : "";
+    // Obtener la parte escrita del correo
+$correoLocal = isset($_POST["correo_local"]) && is_string($_POST["correo_local"])
+    ? trim($_POST["correo_local"])
+    : "";
+
+// Obtener el dominio seleccionado
+$dominioCorreo = isset($_POST["dominio_correo"]) && is_string($_POST["dominio_correo"])
+    ? strtolower(trim($_POST["dominio_correo"]))
+    : "";
+
+// Comprobar que el dominio esté permitido
+if (!in_array($dominioCorreo, $dominiosCorreoPermitidos, true)) {
+    $dominioCorreo = "";
+}
+
+// Construir el correo completo
+$correo = $correoLocal . $dominioCorreo;
 
     $contrasena = isset($_POST["contrasena"]) && is_string($_POST["contrasena"])
-        ? trim($_POST["contrasena"])
+        ? $_POST["contrasena"]
+        : "";
+
+    $confirmarContrasena = isset($_POST["confirmar_contrasena"]) && is_string($_POST["confirmar_contrasena"])
+        ? $_POST["confirmar_contrasena"]
         : "";
 
     // ==========================================
@@ -80,11 +149,11 @@ if ($nombreCompleto === "") {
 
 
 // Validar correo
-if ($correo === "") {
+if ($correoLocal === "" || $dominioCorreo === "") {
 
     $erroresRegistro["correo"] = "Escribe tu correo electrónico.";
 
-} elseif (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+} elseif (strlen($correoLocal) > 64 || !filter_var($correo, FILTER_VALIDATE_EMAIL)) {
 
     $erroresRegistro["correo"] = "El formato del correo no es válido.";
 
@@ -108,7 +177,21 @@ if ($contrasena === "") {
 
 }
 
+// Validar confirmación de contraseña
 
+if ($confirmarContrasena === "") {
+
+    $erroresRegistro["confirmar_contrasena"] = "Confirma tu contraseña.";
+
+} elseif ($contrasena === "") {
+
+    $erroresRegistro["confirmar_contrasena"] = "Escribe primero una contraseña.";
+
+} elseif ($contrasena !== $confirmarContrasena) {
+
+    $erroresRegistro["confirmar_contrasena"] = "Las contraseñas no coinciden.";
+
+}
 // ==========================================
 // GUARDAR REGISTRO SI TODO ESTÁ CORRECTO
 // ==========================================
@@ -117,6 +200,7 @@ if (
     $erroresRegistro["usuario"] === "" &&
     $erroresRegistro["correo"] === "" &&
     $erroresRegistro["contrasena"] === ""
+    && $erroresRegistro["confirmar_contrasena"] === ""
 ) {
 
     try {
@@ -156,7 +240,7 @@ if (
             $_SESSION["mensaje_registro"] = "Registro guardado correctamente.";
             $_SESSION["tipo_mensaje_registro"] = "success";
 
-            header("Location: index.php");
+            header("Location: index.php?form=login");
             exit;
 
         }
@@ -192,19 +276,33 @@ if (
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["iniciar_sesion"])) {
 
     $erroresLogin = $erroresLoginVacios;
-    $correoLogin = trim($_POST["correo"] ?? "");
+   $correoLocalLogin = isset($_POST["correo_local"]) && is_string($_POST["correo_local"])
+    ? trim($_POST["correo_local"])
+    : "";
+
+$dominioCorreoLogin = isset($_POST["dominio_correo"]) && is_string($_POST["dominio_correo"])
+    ? strtolower(trim($_POST["dominio_correo"]))
+    : "";
+
+if (!in_array($dominioCorreoLogin, $dominiosCorreoPermitidos, true)) {
+    $dominioCorreoLogin = "";
+}
+
+// Construir el correo completo
+$correoLogin = $correoLocalLogin . $dominioCorreoLogin;
+
     $contrasenaLogin = $_POST["contrasena"] ?? "";
 
     // Validar correo
-    if ($correoLogin === "") {
+    if ($correoLocalLogin === "" || $dominioCorreoLogin === "") {
 
-        $erroresLogin["correo"] = "Escribe tu correo electrónico.";
+    $erroresLogin["correo"] = "Escribe tu correo electrónico.";
 
-    } elseif (!filter_var($correoLogin, FILTER_VALIDATE_EMAIL)) {
+} elseif (strlen($correoLocalLogin) > 64 || !filter_var($correoLogin, FILTER_VALIDATE_EMAIL)) {
 
-        $erroresLogin["correo"] = "El formato del correo no es válido.";
+    $erroresLogin["correo"] = "El formato del correo no es válido.";
 
-    }
+}
 
     // Validar contraseña
     if ($contrasenaLogin === "") {
@@ -403,23 +501,48 @@ $mostrarFormularioLogin = (
 
                         <h4>Correo:</h4>
 
-                        <label>
+                       
 
-                            <img src="imagenes/email.png" alt="" aria-hidden="true">
+                            <div class="correo-control">
 
-                            <input
-                                type="email"
-                                id="correoRegistro"
-                                name="correo"
-                                placeholder="Ingrese su Correo Electronico"
-                                maxlength="100"
-                                required
-                                value="<?= htmlspecialchars($correo, ENT_QUOTES, "UTF-8") ?>"
-                            >
-                            <small id="errorCorreo" class="error-campo">
-                            Escribe tu correo electrónico.
-                            </small>
-                        </label>
+    <img src="imagenes/email.png" alt="" aria-hidden="true">
+
+    <input
+        type="text"
+        id="correoRegistro"
+        name="correo_local"
+        class="correo-local"
+        placeholder="Ingrese su correo"
+        maxlength="64"
+        pattern="[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+"
+        autocomplete="username"
+        aria-label="Nombre del correo electrónico"
+        required
+        value="<?= htmlspecialchars($correoRegistroLocal, ENT_QUOTES, "UTF-8") ?>"
+    >
+
+    <select
+        id="dominioCorreoRegistro"
+        name="dominio_correo"
+        class="dominio-correo"
+        aria-label="Dominio del correo"
+    >
+
+        <option value="@gmail.com" <?= $dominioRegistro === "@gmail.com" ? "selected" : "" ?>>
+            @gmail.com
+        </option>
+
+        <option value="@hotmail.com" <?= $dominioRegistro === "@hotmail.com" ? "selected" : "" ?>>
+            @hotmail.com
+        </option>
+
+    </select>
+
+</div>
+<small id="errorCorreo" class="error-campo">
+    Escribe tu correo electrónico.
+</small>
+                        
 
                         <?php if ($erroresRegistro["correo"] !== ""): ?>
 
@@ -437,7 +560,7 @@ $mostrarFormularioLogin = (
                     <div class="campo">
 
                         <h4>Contraseña:</h4>
-
+                            <div class="password-control">
                         <label>
 
                             <img src="imagenes/candado.png" alt="" aria-hidden="true">
@@ -452,6 +575,43 @@ $mostrarFormularioLogin = (
                                 required
                             >
                         </label>
+                        
+
+<button
+    type="button"
+    class="toggle-password"
+    data-target="contrasenaRegistro"
+    aria-label="Mostrar contraseña"
+    aria-pressed="false"
+>
+    <svg class="icon-eye" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor"
+         stroke-width="2"
+         stroke-linecap="round"
+         stroke-linejoin="round"
+         aria-hidden="true">
+
+        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/>
+        <circle cx="12" cy="12" r="3"/>
+
+    </svg>
+
+    <svg class="icon-eye-off" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor"
+         stroke-width="2"
+         stroke-linecap="round"
+         stroke-linejoin="round"
+         aria-hidden="true">
+
+        <path d="m3 3 18 18"/>
+        <path d="M10.58 10.58a2 2 0 0 0 2.83 2.83"/>
+        <path d="M9.88 5.2A10.8 10.8 0 0 1 12 5c6.2 0 9.5 7 9.5 7a16 16 0 0 1-4.1 4.8"/>
+        <path d="M6.6 6.6A16 16 0 0 0 2.5 12s3.3 7 9.5 7a10.8 10.8 0 0 0 2.1-.2"/>
+
+    </svg>
+</button>
+</div>
+
                         <small id="errorContrasena" class="error-campo">
                             Escribe una contraseña con al menos 8 caracteres, incluyendo una letra mayúscula, una letra minúscula, un número y un carácter especial.
                         </small>
@@ -465,6 +625,37 @@ $mostrarFormularioLogin = (
 <?php endif; ?>
 
                     </div>
+
+<div class="campo">
+
+    <h4>Confirmar contraseña:</h4>
+
+    <label>
+        <img src="imagenes/candado.png" alt="" aria-hidden="true">
+
+        <input
+            type="password"
+            id="confirmarContrasenaRegistro"
+            name="confirmar_contrasena"
+            placeholder="Repita su contraseña"
+            autocomplete="new-password"
+            required
+        >
+    </label>
+
+    <small id="errorConfirmarContrasena" class="error-campo">
+        Las contraseñas no coinciden.
+    </small>
+
+    <?php if ($erroresRegistro["confirmar_contrasena"] !== ""): ?>
+
+    <span class="mensaje-campo error" role="alert">
+        <?= htmlspecialchars($erroresRegistro["confirmar_contrasena"], ENT_QUOTES, "UTF-8") ?>
+    </span>
+
+<?php endif; ?>
+
+</div>
 
                     <input type="submit" name="registrar" value="Registrar">
 
@@ -480,7 +671,6 @@ $mostrarFormularioLogin = (
     <!-- ==================================
          FORMULARIO DE INICIO DE SESIÓN
     =================================== -->
-
     <div class="container-form login <?= $mostrarFormularioLogin ? '' : 'hide' ?>">
 
         <div class="information">
@@ -512,6 +702,14 @@ $mostrarFormularioLogin = (
 
                 <p><strong>Iniciar sesion con una cuenta</strong></p>
 
+                <?php if ($tipoMensajeRegistro === "success"): ?>
+
+                    <p class="form-message success" role="status">
+                        <?= htmlspecialchars($mensajeRegistro, ENT_QUOTES, "UTF-8") ?>
+                    </p>
+
+                <?php endif; ?>
+
                 <?php if ($mensajeLogin !== ""): ?>
 
                     <p class="form-message error" role="alert">
@@ -526,20 +724,46 @@ $mostrarFormularioLogin = (
 
                         <h4>Correo:</h4>
 
-                        <label>
+                       
 
-                            <img src="imagenes/email.png" alt="" aria-hidden="true">
+                            <div class="correo-control">
 
-                            <input
-                                type="email"
-                                name="correo"
-                                placeholder="Ingrese su Correo Electronico"
-                                maxlength="100"
-                                required
-                                value="<?= htmlspecialchars($correoLogin, ENT_QUOTES, "UTF-8") ?>"
-                            >
+    <img src="imagenes/email.png" alt="" aria-hidden="true">
 
-                        </label>
+    <input
+        type="text"
+        id="correoLogin"
+        name="correo_local"
+        class="correo-local"
+        placeholder="Ingrese su correo"
+        maxlength="64"
+        pattern="[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+"
+        autocomplete="username"
+        aria-label="Nombre del correo electrónico"
+        required
+        value="<?= htmlspecialchars($correoLoginLocal, ENT_QUOTES, "UTF-8") ?>"
+    >
+
+    <select
+        id="dominioCorreoLogin"
+        name="dominio_correo"
+        class="dominio-correo"
+        aria-label="Dominio del correo"
+    >
+
+        <option value="@gmail.com" <?= $dominioLogin === "@gmail.com" ? "selected" : "" ?>>
+            @gmail.com
+        </option>
+
+        <option value="@hotmail.com" <?= $dominioLogin === "@hotmail.com" ? "selected" : "" ?>>
+            @hotmail.com
+        </option>
+
+    </select>
+
+</div>
+
+                        
                         <?php if ($erroresLogin["correo"] !== ""): ?>
 
     <span class="mensaje-campo error" role="alert">
@@ -553,6 +777,7 @@ $mostrarFormularioLogin = (
                     <div class="campo">
 
                         <h4>Contraseña:</h4>
+                        <div class="password-control">
 
                         <label>
 
@@ -570,7 +795,42 @@ $mostrarFormularioLogin = (
 
 
                         </label>
+                        
 
+                        <button
+    type="button"
+    class="toggle-password"
+    data-target="contrasena"
+    aria-label="Mostrar contraseña"
+    aria-pressed="false"
+>
+    <svg class="icon-eye" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor"
+         stroke-width="2"
+         stroke-linecap="round"
+         stroke-linejoin="round"
+         aria-hidden="true">
+
+        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/>
+        <circle cx="12" cy="12" r="3"/>
+
+    </svg>
+
+    <svg class="icon-eye-off" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor"
+         stroke-width="2"
+         stroke-linecap="round"
+         stroke-linejoin="round"
+         aria-hidden="true">
+
+        <path d="m3 3 18 18"/>
+        <path d="M10.58 10.58a2 2 0 0 0 2.83 2.83"/>
+        <path d="M9.88 5.2A10.8 10.8 0 0 1 12 5c6.2 0 9.5 7 9.5 7a16 16 0 0 1-4.1 4.8"/>
+        <path d="M6.6 6.6A16 16 0 0 0 2.5 12s3.3 7 9.5 7a10.8 10.8 0 0 0 2.1-.2"/>
+
+    </svg>
+</button>
+</div>
                         <?php if ($erroresLogin["contrasena"] !== ""): ?>
 
     <span class="mensaje-campo error" role="alert">

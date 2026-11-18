@@ -242,6 +242,21 @@ nav ul {
 nav li {
     margin: 0 15px;
 }
+.cerrar-sesion-form {
+    position: fixed;
+    top: 65px;
+    right: 16px;
+    z-index: 1001;
+    margin: 0;
+}
+.boton-cerrar-sesion {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
 footer {
     width: 100%;
     background-image: url("../wallpaper.png");
